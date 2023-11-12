@@ -1,71 +1,53 @@
-# binary-view README
+# Shell Preview
 
-This is the README for your extension "binary-view". After writing up a brief description, we recommend including the following sections.
+VS Code extension for viewing the output of a custom shell command on the active file.
 
-## Features
+![extension demo](images/shell-preview-demo.gif)
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+## Configuration
 
-For example if there is an image subfolder under your extension project workspace:
+Configure your VS Code workspace or user settings
+```
+{
+    // Command definitions
+    "shell-preview.commands": {
+        "xxd": "xxd ${file}",
+        "hexdump": "hexdump ${file}",
+        "tshark": "tshark -r ${file}",
+        "tcpdump": "tcpdump -r ${file}"
+    },
 
-\!\[feature X\]\(images/feature-x.png\)
+    // Associate file names with command definitions.
+    // If no association is found the user is prompted to choose on available command.
+    "shell-preview.fileAssociations": {
+        "*.bin": "xxd",
+        "*.pcap": "tcpdump"
+    }
+}
+```
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+## Usage
 
-## Requirements
+Open the file to process, then in the command palette (`Ctrl+Shift+P` or
+`View > Command Palette...`) run `Shell Preview: Run Command and Open Output`.
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
 
-## Extension Settings
+## License
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+Licensed under either of
 
-For example:
+ * Apache License, Version 2.0
+   ([LICENSE-APACHE](LICENSE-APACHE) or http://www.apache.org/licenses/LICENSE-2.0)
+ * MIT license
+   ([LICENSE-MIT](LICENSE-MIT) or http://opensource.org/licenses/MIT)
 
-This extension contributes the following settings:
+at your option.
 
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
+## Contribution
 
-## Known Issues
+Feel free to open a Github issue or a pull request.
+I will try my best to address them, but cannot guarantee to respond or accept all issues.
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
-
-## Release Notes
-
-Users appreciate release notes as you update your extension.
-
-### 1.0.0
-
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
-
----
-
-## Following extension guidelines
-
-Ensure that you've read through the extensions guidelines and follow the best practices for creating your extension.
-
-* [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
-
-## Working with Markdown
-
-You can author your README using Visual Studio Code. Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux).
-* Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux).
-* Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets.
-
-## For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
+Unless you explicitly state otherwise, any contribution intentionally submitted
+for inclusion in the work by you, as defined in the Apache-2.0 license, shall be
+dual licensed as above, without any additional terms or conditions.

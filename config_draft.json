@@ -1,0 +1,14 @@
+{
+    "shell-preview.commands": {
+        "xxd": {
+            "command": "/usr/bin/xxd ${file}",
+            "kill-timeout": 20
+        },
+        "objdump": "objdump -x ${file}"
+    },
+    "shell-preview.associations": {
+        "*.bin": "xxd",
+        "*.bincode": "xxd",
+        "*.so": "objdump"
+    }
+}

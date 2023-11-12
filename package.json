@@ -1,23 +1,53 @@
 {
-  "name": "binary-view",
-  "displayName": "Binary View",
-  "description": "View binary files as text using custom commands",
+  "name": "shell-preview",
+  "displayName": "Shell Preview",
+  "description": "View the output of a custom shell command in an editor",
   "version": "0.0.1",
+  "license": "(MIT OR Apache-2.0)",
   "engines": {
     "vscode": "^1.84.0"
   },
   "categories": [
     "Other"
   ],
-  "activationEvents": [],
+  "activationEvents": [
+    "onCommand:extension.shell-preview"
+  ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "binary-view.helloWorld",
-        "title": "Hello World"
+        "command": "shell-preview.viewOutput",
+        "title": "Run Command and Open Output",
+        "category": "Shell Preview"
       }
-    ]
+    ],
+    "configuration": {
+      "title": "Shell Preview",
+      "properties": {
+        "shell-preview.commands": {
+          "description": "Shell command templates",
+          "type": "object",
+          "default": {
+            "xxd": {
+              "command": "xxd ${file}",
+              "killTimeout": 20
+            },
+            "hexdump": "hexdump ${file}",
+            "tshark": "tshark -r ${file}",
+            "tcpdump": "tcpdump -r ${file}"
+          }
+        },
+        "shell-preview.fileAssociations": {
+          "description": "Associate command templates to file types",
+          "type": "object",
+          "default": {
+            "*.bin": "xxd",
+            "*.pcap": "tcpdump"
+          }
+        }
+      }
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
@@ -37,6 +67,11 @@
     "glob": "^10.3.10",
     "mocha": "^10.2.0",
     "typescript": "^5.2.2",
-    "@vscode/test-electron": "^2.3.6"
+    "@vscode/test-electron": "^2.3.6",
+    "minimatch": "^9.0.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fparat/shell-preview.git"
   }
 }
