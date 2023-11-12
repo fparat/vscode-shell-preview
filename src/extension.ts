@@ -39,7 +39,7 @@ function getAssociatedCommand(filePath: string): string | null {
     };
     console.log(`Associations: ${associations}`);
 
-    const minimatch = require("minimatch");
+    const { minimatch } = require('minimatch');
 
     for (const [key, value] of Object.entries(associations)) {
         console.log(`assoc: ${key} -> ${value}`);

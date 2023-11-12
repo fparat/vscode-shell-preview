@@ -2,7 +2,7 @@
   "name": "shell-preview",
   "displayName": "Shell Preview",
   "description": "View the output of a custom shell command in an editor",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "license": "(MIT OR Apache-2.0)",
   "engines": {
     "vscode": "^1.84.0"
@@ -57,18 +57,20 @@
     "lint": "eslint src --ext ts",
     "test": "node ./out/test/runTest.js"
   },
+  "dependencies": {
+    "minimatch": "^9.0.3"
+  },
   "devDependencies": {
-    "@types/vscode": "^1.84.0",
     "@types/mocha": "^10.0.3",
     "@types/node": "18.x",
+    "@types/vscode": "^1.84.0",
     "@typescript-eslint/eslint-plugin": "^6.9.0",
     "@typescript-eslint/parser": "^6.9.0",
+    "@vscode/test-electron": "^2.3.6",
     "eslint": "^8.52.0",
     "glob": "^10.3.10",
     "mocha": "^10.2.0",
-    "typescript": "^5.2.2",
-    "@vscode/test-electron": "^2.3.6",
-    "minimatch": "^9.0.3"
+    "typescript": "^5.2.2"
   },
   "repository": {
     "type": "git",
