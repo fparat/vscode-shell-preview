@@ -127,7 +127,7 @@ function convertTextCommand(context: vscode.ExtensionContext) {
                 console.error(`Command key not found: ${commandKey}`)
                 return `<FAILED: command key not found "${commandKey}">`
             }
-            const command = command_config.command.replace("${file}", `'${uri.path}'`);
+            const command = command_config.command.replaceAll("${file}", `'${uri.path}'`);
 
             const util = require('node:util');
             const exec = util.promisify(require('node:child_process').exec);
