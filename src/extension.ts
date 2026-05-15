@@ -10,7 +10,7 @@ const KILL_TIMEOUT = 20;
 
 type CommandConfig = {
     command: string,
-    kill_timeout: number,
+    killTimeout: number,
 }
 
 /** Get a command configuration given a command key */
@@ -27,10 +27,14 @@ function getCommandConfig(commandKey: string): CommandConfig | null {
     if (typeof command === "string") {
         return {
             command: command,
-            kill_timeout: KILL_TIMEOUT,
+            killTimeout: KILL_TIMEOUT,
         };
     } else {
-        return command;
+        // Ensure the returned object matches CommandConfig
+        return {
+            command: command.command,
+            killTimeout: command.killTimeout ?? KILL_TIMEOUT
+        };
     }
 }
 
@@ -130,30 +134,34 @@ function convertTextCommand(context: vscode.ExtensionContext) {
             const command = command_config.command.replaceAll("${file}", `'${uri.path}'`);
 
             // TODO display warning if processing too long
-            // TODO kill if processing really too long + config for the timeout
             // TODO real-time update of the preview for long commands, is it possible?
-            console.log(`Execute: ${command}`);
+            console.log(`Execute: ${command} (timeout: ${command_config.killTimeout}s)`);
 
             let stdout = "";
             let stderr = "";
             let exitCode: number | undefined = 0;
+            let wasKilled = false;
 
             try {
-                const result = await exec(command);
+                const result = await exec(command, { timeout: command_config.killTimeout * 1000 });
                 stdout = result.stdout;
                 stderr = result.stderr;
                 console.log("Command success");
             } catch (e: unknown) {
-                const error = e as { code?: number, stdout?: string, stderr?: string };
+                const error = e as { code?: number, stdout?: string, stderr?: string, killed?: boolean, signal?: string };
                 exitCode = error.code;
                 stdout = error.stdout || "";
                 stderr = error.stderr || "";
-                console.error(`Command failed: exit code ${exitCode}`);
+                wasKilled = !!error.killed;
+                console.error(`Command failed: exit code ${exitCode}, killed: ${wasKilled}, signal: ${error.signal}`);
             }
 
             const displayExitCode = exitCode !== undefined ? exitCode : "<undefined>";
             let output = `# Command: ${command}\n`;
-            if (exitCode !== 0) {
+            if (wasKilled) {
+                output += `# Terminated: exceeded timeout of ${command_config.killTimeout}s\n`;
+            }
+            if (exitCode !== 0 || wasKilled) {
                 output += `# Exit code: ${displayExitCode}\n`;
             }
 
