@@ -6,9 +6,10 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
-### Fixed
+## [0.0.3] - 2026-05-15
 
 - Fix replacement of multiple occurences of `${file}` in command
+- Updated dependencies
 
 ## [0.0.2] - 2023-11-12
 
