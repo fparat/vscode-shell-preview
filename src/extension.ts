@@ -129,21 +129,44 @@ function convertTextCommand(context: vscode.ExtensionContext) {
             }
             const command = command_config.command.replaceAll("${file}", `'${uri.path}'`);
 
-            // TODO handle stderr and rejection (when error != 0), depending on user configuration
             // TODO display warning if processing too long
             // TODO kill if processing really too long + config for the timeout
             // TODO real-time update of the preview for long commands, is it possible?
             console.log(`Execute: ${command}`);
+
+            let stdout = "";
+            let stderr = "";
+            let exitCode: number | undefined = 0;
+
             try {
-                const { stdout } = await exec(command);
+                const result = await exec(command);
+                stdout = result.stdout;
+                stderr = result.stderr;
                 console.log("Command success");
-                return `# Command: ${command}\n${"-".repeat(80)}\n` + stdout;
             } catch (e: unknown) {
-                // TODO cleaner error
-                const error = e as { code?: number };
-                console.error(`Command failed: exit code ${error.code}`);
-                return `<FAILED: command failed>\n${JSON.stringify(e, null, 4)}`;
+                const error = e as { code?: number, stdout?: string, stderr?: string };
+                exitCode = error.code;
+                stdout = error.stdout || "";
+                stderr = error.stderr || "";
+                console.error(`Command failed: exit code ${exitCode}`);
             }
+
+            const displayExitCode = exitCode !== undefined ? exitCode : "<undefined>";
+            let output = `# Command: ${command}\n`;
+            if (exitCode !== 0) {
+                output += `# Exit code: ${displayExitCode}\n`;
+            }
+
+            if (stderr.length > 0) {
+                if (stdout.length > 0) {
+                    output += `\n# Stdout ${"-".repeat(72)}\n${stdout}`;
+                }
+                output += `\n# Stderr ${"-".repeat(72)}\n${stderr}`;
+            } else if (stdout.length > 0) {
+                output += stdout;
+            }
+
+            return output;
         }
     })();
 
