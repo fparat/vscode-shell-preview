@@ -1,10 +1,16 @@
 import * as vscode from 'vscode';
+import * as path from 'path';
+import { minimatch } from 'minimatch';
+import { promisify } from 'node:util';
+import { exec as execCallback } from 'node:child_process';
+
+const exec = promisify(execCallback);
 
 const KILL_TIMEOUT = 20;
 
 type CommandConfig = {
     command: string,
-    kill_timout: number,
+    kill_timeout: number,
 }
 
 /** Get a command configuration given a command key */
@@ -18,10 +24,10 @@ function getCommandConfig(commandKey: string): CommandConfig | null {
         return null;
     }
 
-    if (typeof command == "string") {
+    if (typeof command === "string") {
         return {
             command: command,
-            kill_timout: KILL_TIMEOUT,
+            kill_timeout: KILL_TIMEOUT,
         };
     } else {
         return command;
@@ -31,7 +37,6 @@ function getCommandConfig(commandKey: string): CommandConfig | null {
 /** Find the command key associated to the given file name or path in the configuration. */
 function getAssociatedCommand(filePath: string): string | null {
     console.log(`Get associated command: ${filePath}`);
-    const path = require("path");
     const fileName = path.basename(filePath);
     console.log(`fileName: ${fileName}`);
     const associations = vscode.workspace.getConfiguration("shell-preview").get("fileAssociations") as {
@@ -39,12 +44,10 @@ function getAssociatedCommand(filePath: string): string | null {
     };
     console.log(`Associations: ${associations}`);
 
-    const { minimatch } = require('minimatch');
-
     for (const [key, value] of Object.entries(associations)) {
         console.log(`assoc: ${key} -> ${value}`);
         if (minimatch(fileName, key)) {
-            console.log(`Found`)
+            console.log(`Found`);
             return value;
         }
     }
@@ -55,9 +58,9 @@ function getAssociatedCommand(filePath: string): string | null {
 
 /** Find the command key for the given uri, or ask the user with a QuickPick prompt. */
 async function getCommandKeyForUri(uri: vscode.Uri): Promise<string | null> {
-    const path = uri.fsPath;
-    console.log(`Path: ${path}`)
-    let commandKey = getAssociatedCommand(path);
+    const fsPath = uri.fsPath;
+    console.log(`Path: ${fsPath}`);
+    let commandKey = getAssociatedCommand(fsPath);
     if (!commandKey) {
         console.log("Pick command");
 
@@ -67,10 +70,7 @@ async function getCommandKeyForUri(uri: vscode.Uri): Promise<string | null> {
 
         const items = Object.keys(commands);
         console.log("Show QuickPick");
-        const result = await vscode.window.showQuickPick(items, { canPickMany: false }).then(null, reason => {
-            console.error(`QuickPick failed: ${reason}`);
-            throw reason;
-        });
+        const result = await vscode.window.showQuickPick(items, { canPickMany: false });
         console.log("QuickPick finished");
         if (!result) {
             // TODO really cancel
@@ -117,20 +117,17 @@ function convertTextCommand(context: vscode.ExtensionContext) {
             const commandKey = searchParams.get("cmd");
             // TODO cleaner error
             if (!commandKey) {
-                console.error(`Missing command query parameter: ${uri.toString()}`)
+                console.error(`Missing command query parameter: ${uri.toString()}`);
                 return `<FAILED: missing command query parameter>`;
             }
 
             const command_config = getCommandConfig(commandKey);
             if (!command_config) {
                 // TODO cleaner error
-                console.error(`Command key not found: ${commandKey}`)
-                return `<FAILED: command key not found "${commandKey}">`
+                console.error(`Command key not found: ${commandKey}`);
+                return `<FAILED: command key not found "${commandKey}">`;
             }
             const command = command_config.command.replaceAll("${file}", `'${uri.path}'`);
-
-            const util = require('node:util');
-            const exec = util.promisify(require('node:child_process').exec);
 
             // TODO handle stderr and rejection (when error != 0), depending on user configuration
             // TODO display warning if processing too long
@@ -138,12 +135,13 @@ function convertTextCommand(context: vscode.ExtensionContext) {
             // TODO real-time update of the preview for long commands, is it possible?
             console.log(`Execute: ${command}`);
             try {
-                const { stdout, stderr } = await exec(command);
+                const { stdout } = await exec(command);
                 console.log("Command success");
                 return `# Command: ${command}\n${"-".repeat(80)}\n` + stdout;
-            } catch (e: any) {
+            } catch (e: unknown) {
                 // TODO cleaner error
-                console.error(`Command failed: exit code ${e.code}`);
+                const error = e as { code?: number };
+                console.error(`Command failed: exit code ${error.code}`);
                 return `<FAILED: command failed>\n${JSON.stringify(e, null, 4)}`;
             }
         }
@@ -157,18 +155,17 @@ function convertTextCommand(context: vscode.ExtensionContext) {
     return async () => {
         console.log("Convert text callback");
         const activeTabInput = vscode.window.tabGroups.activeTabGroup.activeTab?.input as {
-            [key: string]: any,
             uri: vscode.Uri | undefined
-        };
+        } | undefined;
 
-        if (!activeTabInput.uri) {
-            console.log("No active tab")
+        if (!activeTabInput?.uri) {
+            console.log("No active tab");
             vscode.window.showInformationMessage("No active tab");
             return "";
         }
 
         const activeEditorUri = activeTabInput.uri;
-        console.assert(activeEditorUri.scheme == "file", `not a file: ${activeEditorUri}`);
+        console.assert(activeEditorUri.scheme === "file", `not a file: ${activeEditorUri}`);
 
         const commandKey = await getCommandKeyForUri(activeEditorUri);
         console.log(`Found command key: ${commandKey}`);
@@ -184,6 +181,7 @@ function convertTextCommand(context: vscode.ExtensionContext) {
         console.log(`Open Text Document: ${virtualDocUri.path}`);
         const doc = await vscode.workspace.openTextDocument(virtualDocUri);
         console.log(`Opened text document: ${doc.uri}`);
-        let editor = await vscode.window.showTextDocument(doc, { preview: false });
+        await vscode.window.showTextDocument(doc, { preview: false });
     };
 }
+

@@ -1,0 +1,104 @@
+
+> shell-preview@0.0.2 compile
+> tsc -p ./
+
+node_modules/@vscode/test-electron/out/util.d.ts(1,30): error TS2591: Cannot find name 'child_process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+node_modules/@vscode/test-electron/out/util.d.ts(2,24): error TS2591: Cannot find name 'https'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+node_modules/@vscode/test-electron/out/util.d.ts(107,57): error TS2694: Namespace 'NodeJS' has no exported member 'ReadableStream'.
+node_modules/@vscode/test-electron/out/util.d.ts(109,57): error TS2694: Namespace 'NodeJS' has no exported member 'ReadableStream'.
+node_modules/@vscode/test-electron/out/util.d.ts(109,82): error TS2591: Cannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+node_modules/glob/dist/commonjs/glob.d.ts(48,20): error TS2304: Cannot find name 'URL'.
+node_modules/glob/dist/commonjs/glob.d.ts(154,23): error TS2694: Namespace 'NodeJS' has no exported member 'Platform'.
+node_modules/glob/dist/commonjs/glob.d.ts(205,14): error TS2304: Cannot find name 'AbortSignal'.
+node_modules/glob/dist/commonjs/glob.d.ts(338,22): error TS2694: Namespace 'NodeJS' has no exported member 'Platform'.
+node_modules/glob/dist/commonjs/glob.d.ts(342,14): error TS2304: Cannot find name 'AbortSignal'.
+node_modules/glob/dist/commonjs/ignore.d.ts(17,22): error TS2694: Namespace 'NodeJS' has no exported member 'Platform'.
+node_modules/glob/dist/commonjs/pattern.d.ts(22,95): error TS2694: Namespace 'NodeJS' has no exported member 'Platform'.
+node_modules/glob/dist/commonjs/walker.d.ts(15,20): error TS2304: Cannot find name 'URL'.
+node_modules/glob/dist/commonjs/walker.d.ts(28,23): error TS2694: Namespace 'NodeJS' has no exported member 'Platform'.
+node_modules/glob/dist/commonjs/walker.d.ts(33,14): error TS2304: Cannot find name 'AbortSignal'.
+node_modules/glob/dist/commonjs/walker.d.ts(61,14): error TS2304: Cannot find name 'AbortSignal'.
+node_modules/lru-cache/dist/commonjs/node/index.d.ts(37,24): error TS2304: Cannot find name 'AbortController'.
+node_modules/lru-cache/dist/commonjs/node/index.d.ts(104,17): error TS2304: Cannot find name 'AbortSignal'.
+node_modules/lru-cache/dist/commonjs/node/index.d.ts(330,18): error TS2304: Cannot find name 'AbortSignal'.
+node_modules/lru-cache/dist/commonjs/node/index.d.ts(1012,34): error TS2694: Namespace 'NodeJS' has no exported member 'Timeout'.
+node_modules/minipass/dist/commonjs/index.d.ts(1,30): error TS2591: Cannot find name 'node:events'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+node_modules/minipass/dist/commonjs/index.d.ts(2,31): error TS2591: Cannot find name 'node:string_decoder'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+node_modules/minipass/dist/commonjs/index.d.ts(14,82): error TS2694: Namespace 'NodeJS' has no exported member 'ReadStream'.
+node_modules/minipass/dist/commonjs/index.d.ts(14,102): error TS2694: Namespace 'NodeJS' has no exported member 'WriteStream'.
+node_modules/minipass/dist/commonjs/index.d.ts(21,14): error TS2694: Namespace 'NodeJS' has no exported member 'ReadStream'.
+node_modules/minipass/dist/commonjs/index.d.ts(23,14): error TS2694: Namespace 'NodeJS' has no exported member 'WriteStream'.
+node_modules/minipass/dist/commonjs/index.d.ts(108,28): error TS2304: Cannot find name 'BufferEncoding'.
+node_modules/minipass/dist/commonjs/index.d.ts(112,61): error TS2694: Namespace 'NodeJS' has no exported member 'WriteStream'.
+node_modules/minipass/dist/commonjs/index.d.ts(112,83): error TS2694: Namespace 'NodeJS' has no exported member 'WriteStream'.
+node_modules/minipass/dist/commonjs/index.d.ts(121,61): error TS2694: Namespace 'NodeJS' has no exported member 'ReadStream'.
+node_modules/minipass/dist/commonjs/index.d.ts(121,82): error TS2694: Namespace 'NodeJS' has no exported member 'ReadStream'.
+node_modules/minipass/dist/commonjs/index.d.ts(142,49): error TS2591: Cannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+node_modules/minipass/dist/commonjs/index.d.ts(159,34): error TS2591: Cannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+node_modules/minipass/dist/commonjs/index.d.ts(160,34): error TS2591: Cannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+node_modules/minipass/dist/commonjs/index.d.ts(173,18): error TS2304: Cannot find name 'AbortSignal'.
+node_modules/minipass/dist/commonjs/index.d.ts(180,20): error TS2304: Cannot find name 'BufferEncoding'.
+node_modules/minipass/dist/commonjs/index.d.ts(193,19): error TS2304: Cannot find name 'BufferEncoding'.
+node_modules/minipass/dist/commonjs/index.d.ts(213,98): error TS2591: Cannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+node_modules/minipass/dist/commonjs/index.d.ts(227,55): error TS2591: Cannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+node_modules/minipass/dist/commonjs/index.d.ts(233,17): error TS2304: Cannot find name 'BufferEncoding'.
+node_modules/minipass/dist/commonjs/index.d.ts(243,16): error TS2304: Cannot find name 'AbortSignal'.
+node_modules/minipass/dist/commonjs/index.d.ts(261,72): error TS2591: Cannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+node_modules/minipass/dist/commonjs/index.d.ts(275,21): error TS2304: Cannot find name 'BufferEncoding'.
+node_modules/minipass/dist/commonjs/index.d.ts(279,24): error TS2304: Cannot find name 'BufferEncoding'.
+node_modules/minipass/dist/commonjs/index.d.ts(532,78): error TS2694: Namespace 'NodeJS' has no exported member 'ReadStream'.
+node_modules/minipass/dist/commonjs/index.d.ts(532,98): error TS2694: Namespace 'NodeJS' has no exported member 'WriteStream'.
+node_modules/minipass/dist/commonjs/index.d.ts(539,18): error TS2694: Namespace 'NodeJS' has no exported member 'ReadStream'.
+node_modules/minipass/dist/commonjs/index.d.ts(541,18): error TS2694: Namespace 'NodeJS' has no exported member 'WriteStream'.
+node_modules/path-scurry/dist/commonjs/index.d.ts(2,30): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+node_modules/path-scurry/dist/commonjs/index.d.ts(4,36): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+node_modules/path-scurry/dist/commonjs/index.d.ts(26,24): error TS2694: Namespace 'NodeJS' has no exported member 'ErrnoException'.
+node_modules/path-scurry/dist/commonjs/index.d.ts(47,24): error TS2694: Namespace 'NodeJS' has no exported member 'ErrnoException'.
+node_modules/path-scurry/dist/commonjs/index.d.ts(431,31): error TS2694: Namespace 'NodeJS' has no exported member 'ErrnoException'.
+node_modules/path-scurry/dist/commonjs/index.d.ts(624,23): error TS2304: Cannot find name 'URL'.
+node_modules/path-scurry/dist/commonjs/index.d.ts(1048,23): error TS2304: Cannot find name 'URL'.
+node_modules/path-scurry/dist/commonjs/index.d.ts(1074,23): error TS2304: Cannot find name 'URL'.
+node_modules/path-scurry/dist/commonjs/index.d.ts(1097,23): error TS2304: Cannot find name 'URL'.
+src/extension.ts(33,5): error TS2584: Cannot find name 'console'. Do you need to change your target library? Try changing the 'lib' compiler option to include 'dom'.
+src/extension.ts(34,18): error TS2591: Cannot find name 'require'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/extension.ts(36,5): error TS2584: Cannot find name 'console'. Do you need to change your target library? Try changing the 'lib' compiler option to include 'dom'.
+src/extension.ts(40,5): error TS2584: Cannot find name 'console'. Do you need to change your target library? Try changing the 'lib' compiler option to include 'dom'.
+src/extension.ts(42,27): error TS2591: Cannot find name 'require'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/extension.ts(45,9): error TS2584: Cannot find name 'console'. Do you need to change your target library? Try changing the 'lib' compiler option to include 'dom'.
+src/extension.ts(47,13): error TS2584: Cannot find name 'console'. Do you need to change your target library? Try changing the 'lib' compiler option to include 'dom'.
+src/extension.ts(52,5): error TS2584: Cannot find name 'console'. Do you need to change your target library? Try changing the 'lib' compiler option to include 'dom'.
+src/extension.ts(59,5): error TS2584: Cannot find name 'console'. Do you need to change your target library? Try changing the 'lib' compiler option to include 'dom'.
+src/extension.ts(62,9): error TS2584: Cannot find name 'console'. Do you need to change your target library? Try changing the 'lib' compiler option to include 'dom'.
+src/extension.ts(69,9): error TS2584: Cannot find name 'console'. Do you need to change your target library? Try changing the 'lib' compiler option to include 'dom'.
+src/extension.ts(71,13): error TS2584: Cannot find name 'console'. Do you need to change your target library? Try changing the 'lib' compiler option to include 'dom'.
+src/extension.ts(74,9): error TS2584: Cannot find name 'console'. Do you need to change your target library? Try changing the 'lib' compiler option to include 'dom'.
+src/extension.ts(77,13): error TS2584: Cannot find name 'console'. Do you need to change your target library? Try changing the 'lib' compiler option to include 'dom'.
+src/extension.ts(82,9): error TS2584: Cannot find name 'console'. Do you need to change your target library? Try changing the 'lib' compiler option to include 'dom'.
+src/extension.ts(85,5): error TS2584: Cannot find name 'console'. Do you need to change your target library? Try changing the 'lib' compiler option to include 'dom'.
+src/extension.ts(99,5): error TS2584: Cannot find name 'console'. Do you need to change your target library? Try changing the 'lib' compiler option to include 'dom'.
+src/extension.ts(114,13): error TS2584: Cannot find name 'console'. Do you need to change your target library? Try changing the 'lib' compiler option to include 'dom'.
+src/extension.ts(116,38): error TS2304: Cannot find name 'URLSearchParams'.
+src/extension.ts(120,17): error TS2584: Cannot find name 'console'. Do you need to change your target library? Try changing the 'lib' compiler option to include 'dom'.
+src/extension.ts(127,17): error TS2584: Cannot find name 'console'. Do you need to change your target library? Try changing the 'lib' compiler option to include 'dom'.
+src/extension.ts(132,26): error TS2591: Cannot find name 'require'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/extension.ts(133,41): error TS2591: Cannot find name 'require'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/extension.ts(139,13): error TS2584: Cannot find name 'console'. Do you need to change your target library? Try changing the 'lib' compiler option to include 'dom'.
+src/extension.ts(142,17): error TS2584: Cannot find name 'console'. Do you need to change your target library? Try changing the 'lib' compiler option to include 'dom'.
+src/extension.ts(146,17): error TS2584: Cannot find name 'console'. Do you need to change your target library? Try changing the 'lib' compiler option to include 'dom'.
+src/extension.ts(158,9): error TS2584: Cannot find name 'console'. Do you need to change your target library? Try changing the 'lib' compiler option to include 'dom'.
+src/extension.ts(165,13): error TS2584: Cannot find name 'console'. Do you need to change your target library? Try changing the 'lib' compiler option to include 'dom'.
+src/extension.ts(171,9): error TS2584: Cannot find name 'console'. Do you need to change your target library? Try changing the 'lib' compiler option to include 'dom'.
+src/extension.ts(174,9): error TS2584: Cannot find name 'console'. Do you need to change your target library? Try changing the 'lib' compiler option to include 'dom'.
+src/extension.ts(176,13): error TS2584: Cannot find name 'console'. Do you need to change your target library? Try changing the 'lib' compiler option to include 'dom'.
+src/extension.ts(180,9): error TS2584: Cannot find name 'console'. Do you need to change your target library? Try changing the 'lib' compiler option to include 'dom'.
+src/extension.ts(184,9): error TS2584: Cannot find name 'console'. Do you need to change your target library? Try changing the 'lib' compiler option to include 'dom'.
+src/extension.ts(186,9): error TS2584: Cannot find name 'console'. Do you need to change your target library? Try changing the 'lib' compiler option to include 'dom'.
+src/test/runTest.ts(1,23): error TS2591: Cannot find name 'path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/test/runTest.ts(9,49): error TS2304: Cannot find name '__dirname'.
+src/test/runTest.ts(13,43): error TS2304: Cannot find name '__dirname'.
+src/test/runTest.ts(18,3): error TS2584: Cannot find name 'console'. Do you need to change your target library? Try changing the 'lib' compiler option to include 'dom'.
+src/test/runTest.ts(19,3): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/test/suite/extension.test.ts(1,25): error TS2591: Cannot find name 'assert'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/test/suite/index.ts(1,23): error TS2591: Cannot find name 'path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/test/suite/index.ts(12,33): error TS2304: Cannot find name '__dirname'.
+src/test/suite/index.ts(30,3): error TS2584: Cannot find name 'console'. Do you need to change your target library? Try changing the 'lib' compiler option to include 'dom'.
