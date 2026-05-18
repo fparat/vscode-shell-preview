@@ -7,6 +7,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ## [Unreleased]
 - Improve output with exit code and stderr
 - Terminate commands if not finished after a timeout (default 20s)
+- Show a progress notification display with a cancel button for long running commands.
 
 ## [0.0.3] - 2026-05-15
 

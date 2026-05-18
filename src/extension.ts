@@ -133,44 +133,96 @@ function convertTextCommand(context: vscode.ExtensionContext) {
             // TODO real-time update of the preview for long commands, is it possible?
             console.log(`Execute: ${command} (timeout: ${command_config.killTimeout}s)`);
 
-            let stdout = "";
-            let stderr = "";
-            let exitCode: number | undefined = 0;
-            let wasKilled = false;
+            const abortController = new AbortController();
+            let isDone = false;
+            let userCancelled = false;
 
-            try {
-                const result = await exec(command, { timeout: command_config.killTimeout * 1000 });
-                stdout = result.stdout;
-                stderr = result.stderr;
-                console.log("Command success");
-            } catch (e: unknown) {
-                const error = e as { code?: number, stdout?: string, stderr?: string, killed?: boolean, signal?: string };
-                exitCode = error.code;
-                stdout = error.stdout || "";
-                stderr = error.stderr || "";
-                wasKilled = !!error.killed;
-                console.error(`Command failed: exit code ${exitCode}, killed: ${wasKilled}, signal: ${error.signal}`);
-            }
+            const workPromise = (async () => {
+                let stdout = "";
+                let stderr = "";
+                let exitCode: number | undefined = 0;
+                let wasKilled = false;
 
-            const displayExitCode = exitCode !== undefined ? exitCode : "<undefined>";
-            let output = `# Command: ${command}\n`;
-            if (wasKilled) {
-                output += `# Terminated: exceeded timeout of ${command_config.killTimeout}s\n`;
-            }
-            if (exitCode !== 0 || wasKilled) {
-                output += `# Exit code: ${displayExitCode}\n`;
-            }
+                try {
+                    const result = await exec(command, {
+                        timeout: command_config.killTimeout * 1000,
+                        signal: abortController.signal
+                    });
+                    stdout = result.stdout;
+                    stderr = result.stderr;
+                    console.log("Command success");
+                } catch (e: unknown) {
+                    const error = e as { code?: number, stdout?: string, stderr?: string, killed?: boolean, signal?: string, name?: string };
 
-            if (stderr.length > 0) {
-                if (stdout.length > 0) {
-                    output += `\n# Stdout ${"-".repeat(72)}\n${stdout}`;
+                    if (error.name === 'AbortError') {
+                        userCancelled = true;
+                        wasKilled = true;
+                    } else {
+                        wasKilled = !!error.killed;
+                    }
+
+                    exitCode = error.code;
+                    stdout = error.stdout || "";
+                    stderr = error.stderr || "";
+                    console.error(`Command failed: name=${error.name}, exit code ${exitCode}, killed: ${wasKilled}, signal: ${error.signal}`);
+                } finally {
+                    isDone = true;
                 }
-                output += `\n# Stderr ${"-".repeat(72)}\n${stderr}`;
-            } else if (stdout.length > 0) {
-                output += stdout;
-            }
 
-            return output;
+                const displayExitCode = typeof exitCode === 'number' ? exitCode : "<undefined>";
+                let output = `# Command: ${command}\n`;
+                if (wasKilled) {
+                    const reason = userCancelled ? "cancelled by user" : `exceeded timeout of ${command_config.killTimeout}s`;
+                    output += `# Terminated: ${reason}\n`;
+                }
+
+                if (typeof exitCode === 'number') {
+                    if (exitCode !== 0) {
+                        output += `# Exit code: ${exitCode}\n`;
+                    }
+                } else if (!wasKilled) {
+                    output += `# Exit code: ${displayExitCode}\n`;
+                }
+
+                if (stderr.length > 0) {
+                    if (stdout.length > 0) {
+                        output += `\n# Stdout ${"-".repeat(72)}\n${stdout}`;
+                    }
+                    output += `\n# Stderr ${"-".repeat(72)}\n${stderr}`;
+                } else if (stdout.length > 0) {
+                    output += stdout;
+                }
+
+                return output;
+            })();
+
+            setTimeout(() => {
+                if (!isDone) {
+                    vscode.window.withProgress({
+                        location: vscode.ProgressLocation.Notification,
+                        title: `Shell Preview: ${commandKey}`,
+                        cancellable: true
+                    }, async (progress, token) => {
+                        progress.report({ message: "Processing..." });
+                        const progressTimer = setTimeout(() => {
+                            progress.report({ message: "Taking longer than expected..." });
+                        }, 2000);
+
+                        token.onCancellationRequested(() => {
+                            console.log("Command cancelled by user via progress notification");
+                            abortController.abort();
+                        });
+
+                        try {
+                            await workPromise;
+                        } finally {
+                            clearTimeout(progressTimer);
+                        }
+                    });
+                }
+            }, 1000);
+
+            return workPromise;
         }
     })();
 
@@ -202,8 +254,7 @@ function convertTextCommand(context: vscode.ExtensionContext) {
         }
 
         console.log(`Active editor: ${activeEditorUri.path}`);
-        const virtualDocUri = vscode.Uri.parse(`${convertTextScheme}:${activeEditorUri.path}?cmd=${commandKey}`);
-        convertTextProvider.onDidChangeEmitter.fire(virtualDocUri); // force re-processing
+        const virtualDocUri = vscode.Uri.parse(`${convertTextScheme}:${activeEditorUri.path}?cmd=${commandKey}&_ts=${Date.now()}`);
 
         console.log(`Open Text Document: ${virtualDocUri.path}`);
         const doc = await vscode.workspace.openTextDocument(virtualDocUri);
@@ -211,4 +262,3 @@ function convertTextCommand(context: vscode.ExtensionContext) {
         await vscode.window.showTextDocument(doc, { preview: false });
     };
 }
-
