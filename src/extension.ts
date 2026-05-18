@@ -77,9 +77,7 @@ async function getCommandKeyForUri(uri: vscode.Uri): Promise<string | null> {
         const result = await vscode.window.showQuickPick(items, { canPickMany: false });
         console.log("QuickPick finished");
         if (!result) {
-            // TODO really cancel
             console.log("Pick cancelled");
-            // return `<FAILED: user pick cancelled>`;
             return null;
         }
 
@@ -119,17 +117,15 @@ function convertTextCommand(context: vscode.ExtensionContext) {
 
             const searchParams = new URLSearchParams(uri.query);
             const commandKey = searchParams.get("cmd");
-            // TODO cleaner error
             if (!commandKey) {
                 console.error(`Missing command query parameter: ${uri.toString()}`);
-                return `<FAILED: missing command query parameter>`;
+                return `# Error: Missing command query parameter\n# URI: ${uri.toString()}`;
             }
 
             const command_config = getCommandConfig(commandKey);
             if (!command_config) {
-                // TODO cleaner error
                 console.error(`Command key not found: ${commandKey}`);
-                return `<FAILED: command key not found "${commandKey}">`;
+                return `# Error: Command key not found in configuration\n# Key: "${commandKey}"`;
             }
             const command = command_config.command.replaceAll("${file}", `'${uri.path}'`);
 
