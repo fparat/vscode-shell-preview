@@ -43,10 +43,31 @@ function getAssociatedCommand(filePath: string): string | null {
     console.log(`Get associated command: ${filePath}`);
     const fileName = path.basename(filePath);
     console.log(`fileName: ${fileName}`);
-    const associations = vscode.workspace.getConfiguration("shell-preview").get("fileAssociations") as {
-        [key: string]: string,
-    };
-    console.log(`Associations: ${associations}`);
+
+    const config = vscode.workspace.getConfiguration("shell-preview");
+    const inspect = config.inspect<{ [key: string]: string }>("fileAssociations");
+
+    const associations: { [key: string]: string } = {};
+    if (inspect) {
+        // Manually merge scopes (most to least specific) to preserve the user's key insertion
+        // order (priorities), preventing VS Code's default keys from taking precedence.
+        const sources = [
+            inspect.workspaceFolderValue,
+            inspect.workspaceValue,
+            inspect.globalValue,
+            inspect.defaultValue
+        ];
+
+        for (const source of sources) {
+            if (source) {
+                for (const [key, value] of Object.entries(source)) {
+                    if (!(key in associations)) {
+                        associations[key] = value;
+                    }
+                }
+            }
+        }
+    }
 
     for (const [key, value] of Object.entries(associations)) {
         console.log(`assoc: ${key} -> ${value}`);
