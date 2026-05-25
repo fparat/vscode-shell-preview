@@ -5,6 +5,9 @@ All notable changes to the "shell-preview" extension will be documented in this 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
 ## [Unreleased]
+
+## [0.0.4] - 2026-05-25
+
 - Improve output with exit code and stderr
 - Terminate commands if not finished after a timeout (default 20s)
 - Show a progress notification display with a cancel button for long running commands.
