@@ -90,6 +90,73 @@ async function getCommandKeyForUri(uri: vscode.Uri): Promise<string | null> {
 }
 
 
+const autoOpenedFiles = new Set<string>();
+
+async function handleActiveTextEditorChange(editor: vscode.TextEditor | undefined) {
+    if (!editor) {
+        return;
+    }
+
+    const uri = editor.document.uri;
+    // Only auto-preview files (e.g. not shell-preview or other schemes)
+    if (uri.scheme !== 'file') {
+        return;
+    }
+
+    // Read config
+    const config = vscode.workspace.getConfiguration("shell-preview");
+    const autoPreview = config.get<boolean>("autoPreview", true);
+    if (!autoPreview) {
+        return;
+    }
+
+    // Resolve associated command
+    const commandKey = getAssociatedCommand(uri.fsPath);
+    if (!commandKey) {
+        return;
+    }
+
+    // Check if we already auto-opened a preview for this file
+    if (autoOpenedFiles.has(uri.path)) {
+        console.log(`Auto-preview already opened for: ${uri.path}`);
+        return;
+    }
+
+    // Double check if the preview tab is already open in any tab group
+    const isAlreadyOpen = vscode.window.tabGroups.all.some(group =>
+        group.tabs.some(tab => {
+            const input = tab.input as { uri?: vscode.Uri } | undefined;
+            return input?.uri?.scheme === 'shell-preview' && input?.uri?.path === uri.path;
+        })
+    );
+
+    if (isAlreadyOpen) {
+        console.log(`Preview already exists/open in tabs: ${uri.path}`);
+        // Mark it to avoid future re-opening attempts
+        autoOpenedFiles.add(uri.path);
+        return;
+    }
+
+    // Mark as auto-opened
+    autoOpenedFiles.add(uri.path);
+
+    console.log(`Auto-opening preview for ${uri.path} using command key: ${commandKey}`);
+    const position = config.get<string>("autoPreviewPosition", "beside");
+    const viewColumn = position === "active" ? vscode.ViewColumn.Active : vscode.ViewColumn.Beside;
+    const virtualDocUri = vscode.Uri.parse(`shell-preview:${uri.path}?cmd=${commandKey}&_ts=${Date.now()}`);
+
+    try {
+        const doc = await vscode.workspace.openTextDocument(virtualDocUri);
+        await vscode.window.showTextDocument(doc, {
+            viewColumn,
+            preview: false,
+            preserveFocus: true
+        });
+    } catch (e) {
+        console.error(`Failed to automatically open preview: ${e}`);
+    }
+}
+
 export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(
         vscode.commands.registerCommand(
@@ -98,11 +165,30 @@ export function activate(context: vscode.ExtensionContext) {
         )
     );
 
+    context.subscriptions.push(
+        vscode.window.onDidChangeActiveTextEditor(handleActiveTextEditorChange)
+    );
+
+    context.subscriptions.push(
+        vscode.workspace.onDidCloseTextDocument(doc => {
+            if (doc.uri.scheme === 'file') {
+                autoOpenedFiles.delete(doc.uri.path);
+            }
+        })
+    );
+
+    // Initial check on startup
+    if (vscode.window.activeTextEditor) {
+        handleActiveTextEditorChange(vscode.window.activeTextEditor);
+    }
+
     console.log('Extension activated');
 }
 
 // This method is called when your extension is deactivated
-export function deactivate() { }
+export function deactivate() {
+    autoOpenedFiles.clear();
+}
 
 
 function convertTextCommand(context: vscode.ExtensionContext) {

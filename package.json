@@ -11,7 +11,7 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:extension.shell-preview"
+    "*"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -45,6 +45,20 @@
             "*.bin": "xxd",
             "*.pcap": "tcpdump"
           }
+        },
+        "shell-preview.autoPreview": {
+          "description": "Automatically open a preview when a configured file type is opened.",
+          "type": "boolean",
+          "default": true
+        },
+        "shell-preview.autoPreviewPosition": {
+          "description": "Position of the automatically opened preview.",
+          "type": "string",
+          "enum": [
+            "beside",
+            "active"
+          ],
+          "default": "beside"
         }
       }
     }
