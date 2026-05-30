@@ -113,14 +113,15 @@ async function getCommandKeyForUri(uri: vscode.Uri): Promise<string | null> {
 
 const autoOpenedFiles = new Set<string>();
 
-async function handleActiveTextEditorChange(editor: vscode.TextEditor | undefined) {
-    if (!editor) {
+async function handleActiveTabChange() {
+    const activeTab = vscode.window.tabGroups.activeTabGroup?.activeTab;
+    if (!activeTab) {
         return;
     }
 
-    const uri = editor.document.uri;
-    // Only auto-preview files (e.g. not shell-preview or other schemes)
-    if (uri.scheme !== 'file') {
+    const input = activeTab.input as { uri?: vscode.Uri } | undefined;
+    const uri = input?.uri;
+    if (!uri || uri.scheme !== 'file') {
         return;
     }
 
@@ -186,22 +187,51 @@ export function activate(context: vscode.ExtensionContext) {
         )
     );
 
+    // Listen for text editor changes
     context.subscriptions.push(
-        vscode.window.onDidChangeActiveTextEditor(handleActiveTextEditorChange)
+        vscode.window.onDidChangeActiveTextEditor(() => {
+            handleActiveTabChange();
+        })
     );
 
+    // Listen for tab active/open/close changes in all tab groups
     context.subscriptions.push(
-        vscode.workspace.onDidCloseTextDocument(doc => {
-            if (doc.uri.scheme === 'file') {
-                autoOpenedFiles.delete(doc.uri.path);
+        vscode.window.tabGroups.onDidChangeTabs(e => {
+            if (e.closed.length > 0) {
+                for (const tab of e.closed) {
+                    const input = tab.input as { uri?: vscode.Uri } | undefined;
+                    if (input?.uri?.scheme === 'file') {
+                        // Clean up tracking if no other open tabs exist for this file path
+                        const isStillOpen = vscode.window.tabGroups.all.some(group =>
+                            group.tabs.some(t => {
+                                const inp = t.input as { uri?: vscode.Uri } | undefined;
+                                return inp?.uri?.scheme === 'file' && inp?.uri?.path === input.uri?.path;
+                            })
+                        );
+                        if (!isStillOpen) {
+                            autoOpenedFiles.delete(input.uri.path);
+                        }
+                    }
+                }
             }
+
+            queueMicrotask(() => {
+                handleActiveTabChange();
+            });
+        })
+    );
+
+    // Listen for tab group changes (e.g. focusing a different editor column)
+    context.subscriptions.push(
+        vscode.window.tabGroups.onDidChangeTabGroups(() => {
+            queueMicrotask(() => {
+                handleActiveTabChange();
+            });
         })
     );
 
     // Initial check on startup
-    if (vscode.window.activeTextEditor) {
-        handleActiveTextEditorChange(vscode.window.activeTextEditor);
-    }
+    handleActiveTabChange();
 
     console.log('Extension activated');
 }
