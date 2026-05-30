@@ -2,7 +2,7 @@
   "name": "shell-preview",
   "displayName": "Shell Preview",
   "description": "View the output of a custom shell command in an editor",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "license": "(MIT OR Apache-2.0)",
   "engines": {
     "vscode": "^1.98.0"

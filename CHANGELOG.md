@@ -5,6 +5,8 @@ All notable changes to the "shell-preview" extension will be documented in this 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
 ## [Unreleased]
+
+## [0.0.5] - 2026-05-30
 - Directly open a preview when opening a binary file
 - Activate extension on file read instead of startup
 
