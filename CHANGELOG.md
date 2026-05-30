@@ -6,6 +6,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 - Directly open a preview when opening a binary file
+- Activate extension on file read instead of startup
 
 ## [0.0.4] - 2026-05-25
 

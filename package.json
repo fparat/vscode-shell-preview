@@ -11,7 +11,7 @@
     "Other"
   ],
   "activationEvents": [
-    "*"
+    "onFileSystem:file"
   ],
   "main": "./out/extension.js",
   "contributes": {
